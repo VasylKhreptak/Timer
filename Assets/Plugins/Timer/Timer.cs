@@ -33,13 +33,11 @@ namespace Plugins.Timer
 
         public void Start(float duration)
         {
-            Stop();
+            Reset();
 
             _duration = Mathf.Max(0, duration);
 
             _onStarted.OnNext(Unit.Default);
-            _progress.Value = 0f;
-            _time.Value = 0f;
             _targetTime.Value = _duration;
 
             _tween = DOTween
