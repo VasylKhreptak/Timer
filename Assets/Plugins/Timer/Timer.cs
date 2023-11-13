@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Plugins.Timer
 {
-    public class Timer
+    public class Timer : ITimer
     {
         private readonly FloatReactiveProperty _progress = new FloatReactiveProperty(0f);
         private readonly FloatReactiveProperty _time = new FloatReactiveProperty(0f);

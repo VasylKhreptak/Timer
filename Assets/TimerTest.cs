@@ -12,7 +12,7 @@ public class TimerTest : MonoBehaviour
     [SerializeField] private float _time;
     [SerializeField] private float _targetTime;
 
-    private Timer _timer;
+    private ITimer _timer;
 
     private void Awake()
     {
