@@ -45,10 +45,10 @@ namespace Plugins.Timer
                 .OnUpdate(() => _time.Value = _progress.Value * _targetTime.Value)
                 .OnComplete(() =>
                 {
-                    _onCompleted.OnNext(Unit.Default);
-                    _onStopped.OnNext(Unit.Default);
                     _progress.Value = 1f;
                     _time.Value = _targetTime.Value;
+                    _onCompleted.OnNext(Unit.Default);
+                    _onStopped.OnNext(Unit.Default);
                 })
                 .SetEase(Ease.Linear)
                 .Play();
