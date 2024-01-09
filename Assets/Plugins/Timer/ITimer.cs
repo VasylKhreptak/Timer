@@ -4,6 +4,8 @@
     {
         public void Start(float duration);
 
+        public void Complete();
+
         public void Stop();
 
         public void Pause();
@@ -11,5 +13,7 @@
         public void Resume();
 
         public void Reset();
+
+        public void SetTimeScale(float timeScale);
     }
 }

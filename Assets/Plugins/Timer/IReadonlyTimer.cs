@@ -6,7 +6,9 @@ namespace Plugins.Timer
     public interface IReadonlyTimer
     {
         public IReadOnlyReactiveProperty<float> Progress { get; }
+        public IReadOnlyReactiveProperty<float> RemainingProgress { get; }
         public IReadOnlyReactiveProperty<float> Time { get; }
+        public IReadOnlyReactiveProperty<float> RemainingTime { get; }
         public IReadOnlyReactiveProperty<float> TargetTime { get; }
 
         public IObservable<Unit> OnStarted { get; }
@@ -14,5 +16,6 @@ namespace Plugins.Timer
         public IObservable<Unit> OnStopped { get; }
         public IObservable<Unit> OnPaused { get; }
         public IObservable<Unit> OnResumed { get; }
+        public IObservable<Unit> OnReset { get; }
     }
 }

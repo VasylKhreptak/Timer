@@ -1,0 +1,40 @@
+﻿using System.Collections;
+using UnityEngine;
+
+namespace Plugins.Timer
+{
+    public static class CoroutineRunner
+    {
+        private static CoroutineRunnerBehaviour _behaviour;
+
+        private static bool _initialized;
+
+        private static void Initialize()
+        {
+            if (_initialized)
+                return;
+
+            GameObject gameObject = new GameObject("CoroutineRunner");
+            Object.DontDestroyOnLoad(gameObject);
+            gameObject.AddComponent<CoroutineRunnerBehaviour>();
+
+            _initialized = true;
+        }
+
+        public static Coroutine Run(IEnumerator routine)
+        {
+            Initialize();
+
+            return _behaviour.StartCoroutine(routine);
+        }
+
+        public static void Stop(Coroutine routine)
+        {
+            Initialize();
+
+            _behaviour.StopCoroutine(routine);
+        }
+
+        public class CoroutineRunnerBehaviour : MonoBehaviour { }
+    }
+}

@@ -338,7 +338,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc75bc5df1ba4d5091f8062f995c7667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tarrgetTime: 10
+  _tarrgetTime: 600
+  _timeScale: 1
   _progress: 0
   _time: 0
   _targetTime: 0
