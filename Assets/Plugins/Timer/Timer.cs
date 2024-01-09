@@ -1,5 +1,5 @@
 using System;
-using DG.Tweening;
+using System.Collections;
 using UniRx;
 using UnityEngine;
 
@@ -12,6 +12,8 @@ namespace Plugins.Timer
         private readonly FloatReactiveProperty _time = new FloatReactiveProperty(0f);
         private readonly FloatReactiveProperty _remainingTime = new FloatReactiveProperty(0f);
         private readonly FloatReactiveProperty _targetTime = new FloatReactiveProperty(0f);
+        private readonly FloatReactiveProperty _timeScale = new FloatReactiveProperty(1f);
+        private readonly BoolReactiveProperty _isPaused = new BoolReactiveProperty(false);
 
         private readonly Subject<Unit> _onStarted = new Subject<Unit>();
         private readonly Subject<Unit> _onCompleted = new Subject<Unit>();
@@ -25,6 +27,8 @@ namespace Plugins.Timer
         public IReadOnlyReactiveProperty<float> Time => _time;
         public IReadOnlyReactiveProperty<float> RemainingTime => _remainingTime;
         public IReadOnlyReactiveProperty<float> TargetTime => _targetTime;
+        public IReadOnlyReactiveProperty<float> TimeScale => _timeScale;
+        public IReadOnlyReactiveProperty<bool> IsPaused => _isPaused;
 
         public IObservable<Unit> OnStarted => _onStarted;
         public IObservable<Unit> OnCompleted => _onCompleted;
@@ -33,35 +37,50 @@ namespace Plugins.Timer
         public IObservable<Unit> OnResumed => _onResumed;
         public IObservable<Unit> OnReset => _onReset;
 
-        private Tween _tween;
+        private Coroutine _coroutine;
 
         private float _duration;
 
         public void Start(float duration)
         {
             Reset();
-            
+
             _duration = Mathf.Max(0, duration);
             _targetTime.Value = _duration;
 
             _onStarted.OnNext(Unit.Default);
 
-            _tween = DOTween
-                .To(() => _progress.Value, x => _progress.Value = x, 1f, _duration)
-                .OnUpdate(() =>
+            _coroutine = CoroutineRunner.Run(TimerRoutine());
+        }
+
+        private IEnumerator TimerRoutine()
+        {
+            while (true)
+            {
+                if (_isPaused.Value)
                 {
-                    _time.Value = _progress.Value * _targetTime.Value;
-                    _remainingTime.Value = _targetTime.Value - _time.Value;
-                    _remainingProgress.Value = 1f - _progress.Value;
-                })
-                .OnComplete(Complete)
-                .SetEase(Ease.Linear)
-                .Play();
+                    yield return null;
+                    continue;
+                }
+
+                _time.Value += UnityEngine.Time.deltaTime * _timeScale.Value;
+                _remainingTime.Value = _targetTime.Value - _time.Value;
+                _progress.Value = _time.Value / _targetTime.Value;
+                _remainingProgress.Value = 1f - _progress.Value;
+
+                if (_time.Value >= _targetTime.Value)
+                {
+                    Complete();
+                    yield break;
+                }
+
+                yield return null;
+            }
         }
 
         public void Complete()
         {
-            if (_tween == null)
+            if (_coroutine == null)
                 return;
 
             Stop();
@@ -75,36 +94,44 @@ namespace Plugins.Timer
 
         public void Stop()
         {
-            if (_tween == null)
+            if (_coroutine == null)
                 return;
 
-            _tween.Kill();
-            _tween = null;
+            CoroutineRunner.Stop(_coroutine);
+            _coroutine = null;
             _onStopped.OnNext(Unit.Default);
         }
 
         public void Pause()
         {
-            if (_tween == null)
+            if (_coroutine == null)
                 return;
 
-            if (_tween.IsPlaying())
+            if (_isPaused.Value == false)
             {
-                _tween.Pause();
+                _isPaused.Value = true;
                 _onPaused.OnNext(Unit.Default);
             }
         }
 
         public void Resume()
         {
-            if (_tween == null)
+            if (_coroutine == null)
                 return;
 
-            if (_tween.IsPlaying() == false)
+            if (_isPaused.Value)
             {
-                _tween.Play();
+                _isPaused.Value = false;
                 _onResumed.OnNext(Unit.Default);
             }
+        }
+
+        public void TogglePause()
+        {
+            if (_isPaused.Value)
+                Resume();
+            else
+                Pause();
         }
 
         public void Reset()
@@ -115,15 +142,33 @@ namespace Plugins.Timer
             _time.Value = 0f;
             _remainingTime.Value = 0f;
             _targetTime.Value = 0f;
+            _isPaused.Value = false;
+            _timeScale.Value = 1f;
             _onReset.OnNext(Unit.Default);
         }
 
         public void SetTimeScale(float timescale)
         {
-            if (_tween == null)
+            if (_coroutine == null)
                 return;
 
-            _tween.timeScale = Mathf.Max(0, timescale);
+            _timeScale.Value = Mathf.Max(0, timescale);
+        }
+
+        public void SetTime(float time)
+        {
+            if (_coroutine == null)
+                return;
+
+            _time.Value = Mathf.Clamp(time, 0f, _targetTime.Value);
+        }
+
+        public void SetTargetTime(float targetTime)
+        {
+            if (_coroutine == null)
+                return;
+
+            _targetTime.Value = Mathf.Max(0, targetTime);
         }
     }
 }

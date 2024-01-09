@@ -12,8 +12,14 @@
 
         public void Resume();
 
+        public void TogglePause();
+
         public void Reset();
 
         public void SetTimeScale(float timeScale);
+
+        public void SetTime(float time);
+
+        public void SetTargetTime(float targetTime);
     }
 }

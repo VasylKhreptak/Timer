@@ -6,8 +6,10 @@ using UnityEngine;
 public class TimerTest : MonoBehaviour
 {
     [Header("Preferences")]
-    [SerializeField] private float _tarrgetTime = 10f;
+    [SerializeField] private float _startTargetTime = 10f;
+    [SerializeField] private float _targetTimeToSet = 20f;
     [SerializeField] private float _timeScale = 1f;
+    [SerializeField] private float _timeToSet = 20f;
 
     [SerializeField] private float _progress;
     [SerializeField] private float _remainingProgress;
@@ -26,6 +28,8 @@ public class TimerTest : MonoBehaviour
         _timer.Time.Subscribe(x => _time = x).AddTo(this);
         _timer.RemainingTime.Subscribe(x => _remainingTime = x).AddTo(this);
         _timer.TargetTime.Subscribe(x => _targetTime = x).AddTo(this);
+        _timer.TimeScale.Subscribe(x => _timeScale = x).AddTo(this);
+        _timer.IsPaused.Subscribe(x => Debug.Log($"IsPaused: {x}")).AddTo(this);
 
         _timer.OnStarted.Subscribe(_ => Debug.Log("Started")).AddTo(this);
         _timer.OnCompleted.Subscribe(_ => Debug.Log("Completed")).AddTo(this);
@@ -36,7 +40,7 @@ public class TimerTest : MonoBehaviour
     }
 
     [Button]
-    private void StartTimer() => _timer.Start(_tarrgetTime);
+    private void StartTimer() => _timer.Start(_startTargetTime);
 
     [Button]
     private void Complete() => _timer.Complete();
@@ -55,4 +59,13 @@ public class TimerTest : MonoBehaviour
 
     [Button]
     private void SetTimeScale() => _timer.SetTimeScale(_timeScale);
+
+    [Button]
+    private void SetTime() => _timer.SetTime(_timeToSet);
+
+    [Button]
+    private void SetTargetTime() => _timer.SetTargetTime(_targetTimeToSet);
+
+    [Button]
+    private void TogglePause() => _timer.TogglePause();
 }
