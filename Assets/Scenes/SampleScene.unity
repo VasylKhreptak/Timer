@@ -338,15 +338,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc75bc5df1ba4d5091f8062f995c7667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startTargetTime: 100
+  _startTargetTime: 10
   _targetTimeToSet: 200
-  _timeScale: 1
+  _targetTimeScale: -1
   _timeToSet: 20
   _progress: 0
   _remainingProgress: 0
   _time: 0
   _remainingTime: 0
   _targetTime: 0
+  _timeScale: -1
 --- !u!4 &1115503903
 Transform:
   m_ObjectHideFlags: 0

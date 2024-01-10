@@ -8,7 +8,7 @@ public class TimerTest : MonoBehaviour
     [Header("Preferences")]
     [SerializeField] private float _startTargetTime = 10f;
     [SerializeField] private float _targetTimeToSet = 20f;
-    [SerializeField] private float _timeScale = 1f;
+    [SerializeField] private float _targetTimeScale = 1f;
     [SerializeField] private float _timeToSet = 20f;
 
     [SerializeField] private float _progress;
@@ -16,6 +16,7 @@ public class TimerTest : MonoBehaviour
     [SerializeField] private float _time;
     [SerializeField] private float _remainingTime;
     [SerializeField] private float _targetTime;
+    [SerializeField] private float _timeScale;
 
     private ITimer _timer;
 
@@ -55,7 +56,7 @@ public class TimerTest : MonoBehaviour
     private void ResetTimer() => _timer.Reset();
 
     [Button]
-    private void SetTimeScale() => _timer.SetTimeScale(_timeScale);
+    private void SetTimeScale() => _timer.SetTimeScale(_targetTimeScale);
 
     [Button]
     private void SetTime() => _timer.SetTime(_timeToSet);

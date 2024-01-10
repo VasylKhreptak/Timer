@@ -62,7 +62,8 @@ namespace Plugins.Timer
                 _progress.Value = _time.Value / _targetTime.Value;
                 _remainingProgress.Value = 1f - _progress.Value;
 
-                if (_time.Value >= _targetTime.Value)
+                if ((Mathf.Sign(_timeScale.Value) >= 0 && _time.Value >= _targetTime.Value) ||
+                    (Mathf.Sign(_timeScale.Value) < 0 && _time.Value <= 0f))
                 {
                     Complete();
                     yield break;
@@ -139,7 +140,7 @@ namespace Plugins.Timer
             if (_coroutine == null)
                 return;
 
-            _timeScale.Value = Mathf.Max(0, timescale);
+            _timeScale.Value = timescale;
         }
 
         public void SetTime(float time)
