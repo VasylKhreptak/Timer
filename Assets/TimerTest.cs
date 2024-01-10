@@ -34,9 +34,6 @@ public class TimerTest : MonoBehaviour
         _timer.OnStarted.Subscribe(_ => Debug.Log("Started")).AddTo(this);
         _timer.OnCompleted.Subscribe(_ => Debug.Log("Completed")).AddTo(this);
         _timer.OnStopped.Subscribe(_ => Debug.Log("Stopped")).AddTo(this);
-        _timer.OnPaused.Subscribe(_ => Debug.Log("Paused")).AddTo(this);
-        _timer.OnResumed.Subscribe(_ => Debug.Log("Resumed")).AddTo(this);
-        _timer.OnReset.Subscribe(_ => Debug.Log("Reset")).AddTo(this);
     }
 
     [Button]

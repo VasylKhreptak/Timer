@@ -16,8 +16,5 @@ namespace Plugins.Timer
         public IObservable<Unit> OnStarted { get; }
         public IObservable<Unit> OnCompleted { get; }
         public IObservable<Unit> OnStopped { get; }
-        public IObservable<Unit> OnPaused { get; }
-        public IObservable<Unit> OnResumed { get; }
-        public IObservable<Unit> OnReset { get; }
     }
 }

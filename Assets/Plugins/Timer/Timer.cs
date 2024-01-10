@@ -18,9 +18,6 @@ namespace Plugins.Timer
         private readonly Subject<Unit> _onStarted = new Subject<Unit>();
         private readonly Subject<Unit> _onCompleted = new Subject<Unit>();
         private readonly Subject<Unit> _onStopped = new Subject<Unit>();
-        private readonly Subject<Unit> _onPaused = new Subject<Unit>();
-        private readonly Subject<Unit> _onResumed = new Subject<Unit>();
-        private readonly Subject<Unit> _onReset = new Subject<Unit>();
 
         public IReadOnlyReactiveProperty<float> Progress => _progress;
         public IReadOnlyReactiveProperty<float> RemainingProgress => _remainingProgress;
@@ -33,9 +30,6 @@ namespace Plugins.Timer
         public IObservable<Unit> OnStarted => _onStarted;
         public IObservable<Unit> OnCompleted => _onCompleted;
         public IObservable<Unit> OnStopped => _onStopped;
-        public IObservable<Unit> OnPaused => _onPaused;
-        public IObservable<Unit> OnResumed => _onResumed;
-        public IObservable<Unit> OnReset => _onReset;
 
         private Coroutine _coroutine;
 
@@ -108,10 +102,7 @@ namespace Plugins.Timer
                 return;
 
             if (_isPaused.Value == false)
-            {
                 _isPaused.Value = true;
-                _onPaused.OnNext(Unit.Default);
-            }
         }
 
         public void Resume()
@@ -120,10 +111,7 @@ namespace Plugins.Timer
                 return;
 
             if (_isPaused.Value)
-            {
                 _isPaused.Value = false;
-                _onResumed.OnNext(Unit.Default);
-            }
         }
 
         public void TogglePause()
@@ -144,7 +132,6 @@ namespace Plugins.Timer
             _targetTime.Value = 0f;
             _isPaused.Value = false;
             _timeScale.Value = 1f;
-            _onReset.OnNext(Unit.Default);
         }
 
         public void SetTimeScale(float timescale)

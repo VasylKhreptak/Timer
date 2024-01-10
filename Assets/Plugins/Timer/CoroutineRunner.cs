@@ -14,7 +14,7 @@ namespace Plugins.Timer
             if (_initialized)
                 return;
 
-            GameObject gameObject = new GameObject("CoroutineRunner");
+            GameObject gameObject = new GameObject("Timer Coroutine Runner");
             Object.DontDestroyOnLoad(gameObject);
             _behaviour = gameObject.AddComponent<CoroutineRunnerBehaviour>();
 
