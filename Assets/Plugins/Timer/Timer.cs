@@ -78,13 +78,13 @@ namespace Plugins.Timer
             if (_coroutine == null)
                 return;
 
-            Stop();
-
             _progress.Value = 1f;
             _remainingProgress.Value = 0f;
             _time.Value = _targetTime.Value;
             _remainingTime.Value = 0f;
             _onCompleted.OnNext(Unit.Default);
+
+            Stop();
         }
 
         public void Stop()
@@ -102,8 +102,7 @@ namespace Plugins.Timer
             if (_coroutine == null)
                 return;
 
-            if (_isPaused.Value == false)
-                _isPaused.Value = true;
+            _isPaused.Value = true;
         }
 
         public void Resume()
@@ -111,8 +110,7 @@ namespace Plugins.Timer
             if (_coroutine == null)
                 return;
 
-            if (_isPaused.Value)
-                _isPaused.Value = false;
+            _isPaused.Value = false;
         }
 
         public void TogglePause()

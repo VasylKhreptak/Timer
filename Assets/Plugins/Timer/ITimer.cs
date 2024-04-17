@@ -20,6 +20,8 @@
 
         public void SetTime(float time);
 
+        public void ResetTime() => SetTime(0f);
+
         public void SetTargetTime(float targetTime);
     }
 }
