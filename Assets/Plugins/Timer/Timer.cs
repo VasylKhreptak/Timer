@@ -78,13 +78,13 @@ namespace Plugins.Timer
             if (_coroutine == null)
                 return;
 
+            Stop();
             _progress.Value = 1f;
             _remainingProgress.Value = 0f;
             _time.Value = _targetTime.Value;
             _remainingTime.Value = 0f;
+            
             _onCompleted.OnNext(Unit.Default);
-
-            Stop();
         }
 
         public void Stop()

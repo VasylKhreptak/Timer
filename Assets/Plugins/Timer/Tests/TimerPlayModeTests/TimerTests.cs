@@ -51,18 +51,18 @@ namespace Plugins.Timer.Tests.TimerPlayModeTests
         }
 
         [UnityTest]
-        public IEnumerator CompletionBeforeStop()
+        public IEnumerator CompletionAfterStop()
         {
-            bool completed = false;
+            bool stopped = false;
 
             ITimer timer = new Timer();
 
             CompositeDisposable disposables = new CompositeDisposable();
 
-            timer.OnCompleted.Subscribe(_ => completed = true).AddTo(disposables);
-            timer.OnStopped.Subscribe(_ =>
+            timer.OnStopped.Subscribe(_ => stopped = true).AddTo(disposables);
+            timer.OnCompleted.Subscribe(_ =>
                 {
-                    if (completed == false)
+                    if (stopped == false)
                         Assert.Fail();
                 })
                 .AddTo(disposables);
@@ -72,8 +72,6 @@ namespace Plugins.Timer.Tests.TimerPlayModeTests
             yield return new WaitForSeconds(DefaultDuration);
 
             disposables.Dispose();
-
-            Assert.IsTrue(completed);
         }
 
         [UnityTest]
