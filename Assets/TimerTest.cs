@@ -1,12 +1,14 @@
-﻿using Plugins.Timer;
+﻿using System;
+using Plugins.Timer;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UniRx;
 using UnityEngine;
 
-public class TimerTest : MonoBehaviour
+public class TimerTest : SerializedMonoBehaviour
 {
     [Header("Preferences")]
-    [SerializeField] private float _startTargetTime = 10f;
+    [OdinSerialize] private float _startTargetTime = 10f;
     [SerializeField] private float _targetTimeToSet = 20f;
     [SerializeField] private float _targetTimeScale = 1f;
 
@@ -16,9 +18,9 @@ public class TimerTest : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private float _progress;
     [SerializeField] private float _remainingProgress;
-    [SerializeField] private float _time;
-    [SerializeField] private float _remainingTime;
-    [SerializeField] private float _targetTime;
+    [SerializeField] private string _time;
+    [SerializeField] private string _remainingTime;
+    [SerializeField] private string _targetTime;
     [SerializeField] private float _timeScale;
 
     private ITimer _timer;
@@ -29,9 +31,9 @@ public class TimerTest : MonoBehaviour
 
         _timer.Progress.Subscribe(x => _progress = x).AddTo(this);
         _timer.RemainingProgress.Subscribe(x => _remainingProgress = x).AddTo(this);
-        _timer.Time.Subscribe(x => _time = x).AddTo(this);
-        _timer.RemainingTime.Subscribe(x => _remainingTime = x).AddTo(this);
-        _timer.TargetTime.Subscribe(x => _targetTime = x).AddTo(this);
+        _timer.Time.Milliseconds.Subscribe(x => _time = Format(_timer.Time.TimeSpan)).AddTo(this);
+        _timer.RemainingTime.Milliseconds.Subscribe(x => _remainingTime = Format(_timer.RemainingTime.TimeSpan)).AddTo(this);
+        _timer.TargetTime.Milliseconds.Subscribe(x => _targetTime = Format(_timer.TargetTime.TimeSpan)).AddTo(this);
         _timer.TimeScale.Subscribe(x => _timeScale = x).AddTo(this);
         _timer.IsPaused.Subscribe(x => Debug.Log($"IsPaused: {x}")).AddTo(this);
 
@@ -40,8 +42,11 @@ public class TimerTest : MonoBehaviour
         _timer.OnStopped.Subscribe(_ => Debug.Log("Stopped")).AddTo(this);
     }
 
+    private string Format(TimeSpan timeSpan) =>
+        $"{timeSpan.Days} : {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds} : {timeSpan.Milliseconds}";
+    
     [Button]
-    private void StartTimer() => _timer.Start(_startTargetTime);
+    private void StartTimer() => _timer.Start(TimeSpan.FromSeconds(_startTargetTime));
 
     [Button]
     private void Complete() => _timer.Complete();
@@ -62,10 +67,10 @@ public class TimerTest : MonoBehaviour
     private void SetTimeScale() => _timer.SetTimeScale(_targetTimeScale);
 
     [Button]
-    private void SetTime() => _timer.SetTime(_timeToSet);
+    private void SetTime() => _timer.SetTime(TimeSpan.FromSeconds(_timeToSet));
 
     [Button]
-    private void SetTargetTime() => _timer.SetTargetTime(_targetTimeToSet);
+    private void SetTargetTime() => _timer.SetTargetTime(TimeSpan.FromSeconds(_targetTimeToSet));
 
     [Button]
     private void TogglePause() => _timer.TogglePause();

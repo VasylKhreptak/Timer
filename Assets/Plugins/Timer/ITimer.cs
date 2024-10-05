@@ -1,8 +1,10 @@
-﻿namespace Plugins.Timer
+﻿using System;
+
+namespace Plugins.Timer
 {
     public interface ITimer : IReadonlyTimer
     {
-        public void Start(float duration);
+        public void Start(TimeSpan timeSpan);
 
         public void Complete();
 
@@ -18,10 +20,10 @@
 
         public void SetTimeScale(float timeScale);
 
-        public void SetTime(float time);
+        public void SetTime(TimeSpan timeSpan);
 
-        public void ResetTime() => SetTime(0f);
+        public void ResetTime() => SetTime(TimeSpan.Zero);
 
-        public void SetTargetTime(float targetTime);
+        public void SetTargetTime(TimeSpan targetTime);
     }
 }

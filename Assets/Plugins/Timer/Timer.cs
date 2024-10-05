@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Plugins.Timer.Reactive;
 using UniRx;
 using UnityEngine;
 
@@ -9,9 +10,9 @@ namespace Plugins.Timer
     {
         private readonly FloatReactiveProperty _progress = new FloatReactiveProperty(0f);
         private readonly FloatReactiveProperty _remainingProgress = new FloatReactiveProperty(0f);
-        private readonly FloatReactiveProperty _time = new FloatReactiveProperty(0f);
-        private readonly FloatReactiveProperty _remainingTime = new FloatReactiveProperty(0f);
-        private readonly FloatReactiveProperty _targetTime = new FloatReactiveProperty(0f);
+        private readonly ReactiveTimeSpan _time = new ReactiveTimeSpan();
+        private readonly ReactiveTimeSpan _remainingTime = new ReactiveTimeSpan();
+        private readonly ReactiveTimeSpan _targetTime = new ReactiveTimeSpan();
         private readonly FloatReactiveProperty _timeScale = new FloatReactiveProperty(1f);
         private readonly BoolReactiveProperty _isPaused = new BoolReactiveProperty(false);
 
@@ -21,9 +22,9 @@ namespace Plugins.Timer
 
         public IReadOnlyReactiveProperty<float> Progress => _progress;
         public IReadOnlyReactiveProperty<float> RemainingProgress => _remainingProgress;
-        public IReadOnlyReactiveProperty<float> Time => _time;
-        public IReadOnlyReactiveProperty<float> RemainingTime => _remainingTime;
-        public IReadOnlyReactiveProperty<float> TargetTime => _targetTime;
+        public IReadOnlyReactiveTimeSpan Time => _time;
+        public IReadOnlyReactiveTimeSpan RemainingTime => _remainingTime;
+        public IReadOnlyReactiveTimeSpan TargetTime => _targetTime;
         public IReadOnlyReactiveProperty<float> TimeScale => _timeScale;
         public IReadOnlyReactiveProperty<bool> IsPaused => _isPaused;
 
@@ -33,14 +34,15 @@ namespace Plugins.Timer
 
         private Coroutine _coroutine;
 
-        private float _duration;
+        private TimeSpan _duration;
 
-        public void Start(float duration)
+        public void Start(TimeSpan timeSpan)
         {
             Reset();
 
-            _duration = Mathf.Max(0, duration);
-            _targetTime.Value = _duration;
+            _duration = Max(TimeSpan.Zero, timeSpan);
+
+            _targetTime.Set(_duration);
 
             _onStarted.OnNext(Unit.Default);
 
@@ -57,13 +59,13 @@ namespace Plugins.Timer
                     continue;
                 }
 
-                _time.Value += UnityEngine.Time.deltaTime * _timeScale.Value;
-                _remainingTime.Value = _targetTime.Value - _time.Value;
-                _progress.Value = _time.Value / _targetTime.Value;
+                _time.Add(TimeSpan.FromSeconds(UnityEngine.Time.deltaTime * _timeScale.Value));
+                _remainingTime.Set(_duration - _time.TimeSpan);
+                _progress.Value = (float)(_time.TimeSpan / _duration);
                 _remainingProgress.Value = 1f - _progress.Value;
 
-                if ((Mathf.Sign(_timeScale.Value) >= 0 && _time.Value >= _targetTime.Value) ||
-                    (Mathf.Sign(_timeScale.Value) < 0 && _time.Value <= 0f))
+                if ((Mathf.Sign(_timeScale.Value) >= 0 && _time.TimeSpan >= _targetTime) ||
+                    (Mathf.Sign(_timeScale.Value) < 0 && _time.TimeSpan <= TimeSpan.Zero))
                 {
                     Complete();
                     yield break;
@@ -81,9 +83,9 @@ namespace Plugins.Timer
             Stop();
             _progress.Value = 1f;
             _remainingProgress.Value = 0f;
-            _time.Value = _targetTime.Value;
-            _remainingTime.Value = 0f;
-            
+            _time.Set(_targetTime.TimeSpan);
+            _remainingTime.Set(TimeSpan.Zero);
+
             _onCompleted.OnNext(Unit.Default);
         }
 
@@ -126,9 +128,9 @@ namespace Plugins.Timer
             Stop();
             _progress.Value = 0f;
             _remainingProgress.Value = 0f;
-            _time.Value = 0f;
-            _remainingTime.Value = 0f;
-            _targetTime.Value = 0f;
+            _time.Set(TimeSpan.Zero);
+            _remainingTime.Set(TimeSpan.Zero);
+            _targetTime.Set(TimeSpan.Zero);
             _isPaused.Value = false;
             _timeScale.Value = 1f;
         }
@@ -141,20 +143,30 @@ namespace Plugins.Timer
             _timeScale.Value = timescale;
         }
 
-        public void SetTime(float time)
+        public void SetTime(TimeSpan time)
         {
             if (_coroutine == null)
                 return;
 
-            _time.Value = Mathf.Clamp(time, 0f, _targetTime.Value);
+            _time.Set(Clamp(time, TimeSpan.Zero, _targetTime.TimeSpan));
         }
 
-        public void SetTargetTime(float targetTime)
+        public void SetTargetTime(TimeSpan targetTime)
         {
             if (_coroutine == null)
                 return;
 
-            _targetTime.Value = Mathf.Max(0, targetTime);
+            _targetTime.Set(Max(TimeSpan.Zero, targetTime));
         }
+
+        private TimeSpan Clamp(TimeSpan timeSpan, TimeSpan min, TimeSpan max)
+        {
+            if (timeSpan < min)
+                return min;
+
+            return timeSpan > max ? max : timeSpan;
+        }
+
+        private TimeSpan Max(TimeSpan t1, TimeSpan t2) => t1 > t2 ? t1 : t2;
     }
 }

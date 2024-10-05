@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -338,15 +337,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc75bc5df1ba4d5091f8062f995c7667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startTargetTime: 10
-  _targetTimeToSet: 200
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _startTargetTime
+      Entry: 4
+      Data: 60
+  _targetTimeToSet: 120
   _targetTimeScale: -1
-  _timeToSet: 20
+  _timeToSet: 0
   _progress: 0
   _remainingProgress: 0
-  _time: 0
-  _remainingTime: 0
-  _targetTime: 0
+  _time: 
+  _remainingTime: 
+  _targetTime: 
   _timeScale: -1
 --- !u!4 &1115503903
 Transform:

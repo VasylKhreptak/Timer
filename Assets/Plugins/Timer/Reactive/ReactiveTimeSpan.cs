@@ -47,6 +47,12 @@ namespace Plugins.Timer.Reactive
             UpdateProperties();
         }
 
+        public void Set(TimeSpan timeSpan)
+        {
+            _timeSpan = timeSpan;
+            UpdateProperties();
+        }
+        
         public void Add(TimeSpan timeSpan)
         {
             _timeSpan = _timeSpan.Add(timeSpan);
@@ -76,6 +82,10 @@ namespace Plugins.Timer.Reactive
             _timeSpan = _timeSpan.Negate();
             UpdateProperties();
         }
+        
+        public static implicit operator TimeSpan(ReactiveTimeSpan reactiveTimeSpan) => reactiveTimeSpan._timeSpan;
+
+        public static implicit operator ReactiveTimeSpan(TimeSpan timeSpan) => new ReactiveTimeSpan(timeSpan);
 
         private void UpdateProperties()
         {
