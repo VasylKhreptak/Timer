@@ -9,8 +9,11 @@ public class TimerTest : MonoBehaviour
     [SerializeField] private float _startTargetTime = 10f;
     [SerializeField] private float _targetTimeToSet = 20f;
     [SerializeField] private float _targetTimeScale = 1f;
+
+    [Space]
     [SerializeField] private float _timeToSet = 20f;
 
+    [Header("Debug")]
     [SerializeField] private float _progress;
     [SerializeField] private float _remainingProgress;
     [SerializeField] private float _time;
