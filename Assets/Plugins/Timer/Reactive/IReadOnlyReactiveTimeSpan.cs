@@ -18,6 +18,8 @@ namespace Plugins.Timer.Reactive
         public IReadOnlyReactiveProperty<double> TotalSeconds { get; }
         public IReadOnlyReactiveProperty<double> TotalMilliseconds { get; }
         
+        public IObservable<Unit> OnAnyUpdate { get; }
+        
         public TimeSpan TimeSpan { get; }
     }
 }

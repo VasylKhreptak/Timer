@@ -31,9 +31,13 @@ public class TimerTest : SerializedMonoBehaviour
 
         _timer.Progress.Subscribe(x => _progress = x).AddTo(this);
         _timer.RemainingProgress.Subscribe(x => _remainingProgress = x).AddTo(this);
-        _timer.Time.Milliseconds.Subscribe(x => _time = Format(_timer.Time.TimeSpan)).AddTo(this);
-        _timer.RemainingTime.Milliseconds.Subscribe(x => _remainingTime = Format(_timer.RemainingTime.TimeSpan)).AddTo(this);
-        _timer.TargetTime.Milliseconds.Subscribe(x => _targetTime = Format(_timer.TargetTime.TimeSpan)).AddTo(this);
+        _timer.Time.OnAnyUpdate.Subscribe(x => _time = Format(_timer.Time.TimeSpan)).AddTo(this);
+        _timer.RemainingTime.OnAnyUpdate.Subscribe(x => _remainingTime = Format(_timer.RemainingTime.TimeSpan)).AddTo(this);
+        _timer.TargetTime.OnAnyUpdate.Subscribe(x =>
+        {
+            Debug.Log("TargetTime: " + _timer.TargetTime.TimeSpan);
+            _targetTime = Format(_timer.TargetTime.TimeSpan);
+        }).AddTo(this);
         _timer.TimeScale.Subscribe(x => _timeScale = x).AddTo(this);
         _timer.IsPaused.Subscribe(x => Debug.Log($"IsPaused: {x}")).AddTo(this);
 
