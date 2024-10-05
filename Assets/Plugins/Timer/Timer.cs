@@ -20,6 +20,8 @@ namespace Plugins.Timer
         private readonly Subject<Unit> _onCompleted = new Subject<Unit>();
         private readonly Subject<Unit> _onStopped = new Subject<Unit>();
 
+        public UpdateMethod UpdateMethod { get; set; } = UpdateMethod.DeltaTime;
+
         public IReadOnlyReactiveProperty<float> Progress => _progress;
         public IReadOnlyReactiveProperty<float> RemainingProgress => _remainingProgress;
         public IReadOnlyReactiveTimeSpan Time => _time;
@@ -59,7 +61,7 @@ namespace Plugins.Timer
                     continue;
                 }
 
-                _time.Add(TimeSpan.FromSeconds(UnityEngine.Time.deltaTime * _timeScale.Value));
+                _time.Add(TimeSpan.FromSeconds(GetDeltaTime() * _timeScale.Value));
                 _remainingTime.Set(_duration - _time.TimeSpan);
                 _progress.Value = (float)(_time.TimeSpan / _duration);
                 _remainingProgress.Value = 1f - _progress.Value;
@@ -168,5 +170,18 @@ namespace Plugins.Timer
         }
 
         private TimeSpan Max(TimeSpan t1, TimeSpan t2) => t1 > t2 ? t1 : t2;
+
+        private float GetDeltaTime()
+        {
+            switch (UpdateMethod)
+            {
+                case UpdateMethod.DeltaTime:
+                    return UnityEngine.Time.deltaTime;
+                case UpdateMethod.UnscaledDeltaTime:
+                    return UnityEngine.Time.unscaledDeltaTime;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

@@ -44,7 +44,7 @@ public class TimerTest : SerializedMonoBehaviour
 
     private string Format(TimeSpan timeSpan) =>
         $"{timeSpan.Days} : {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds} : {timeSpan.Milliseconds}";
-    
+
     [Button]
     private void StartTimer() => _timer.Start(TimeSpan.FromSeconds(_startTargetTime));
 
@@ -74,4 +74,10 @@ public class TimerTest : SerializedMonoBehaviour
 
     [Button]
     private void TogglePause() => _timer.TogglePause();
+
+    [Button]
+    private void SetUpdateMethod(UpdateMethod updateMethod) => _timer.UpdateMethod = updateMethod;
+
+    [Button]
+    private void SetEngineTimeScale(float timeScale) => Time.timeScale = timeScale;
 }

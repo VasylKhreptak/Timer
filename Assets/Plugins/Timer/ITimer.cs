@@ -4,6 +4,8 @@ namespace Plugins.Timer
 {
     public interface ITimer : IReadonlyTimer
     {
+        public new UpdateMethod UpdateMethod { get; set; }
+        
         public void Start(TimeSpan timeSpan);
 
         public void Complete();
