@@ -180,7 +180,7 @@ namespace Plugins.Timer
                 case UpdateMethod.UnscaledDeltaTime:
                     return UnityEngine.Time.unscaledDeltaTime;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotImplementedException();
             }
         }
     }
