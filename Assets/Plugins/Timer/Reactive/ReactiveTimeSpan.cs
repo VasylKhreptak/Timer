@@ -17,7 +17,7 @@ namespace Plugins.Timer.Reactive
         private readonly DoubleReactiveProperty _totalMinutes = new DoubleReactiveProperty(0);
         private readonly DoubleReactiveProperty _totalSeconds = new DoubleReactiveProperty(0);
         private readonly DoubleReactiveProperty _totalMilliseconds = new DoubleReactiveProperty(0);
-        
+
         private readonly Subject<Unit> _onAnyUpdate = new Subject<Unit>();
 
         private TimeSpan _timeSpan;
@@ -34,7 +34,7 @@ namespace Plugins.Timer.Reactive
         public IReadOnlyReactiveProperty<double> TotalMinutes => _totalMinutes;
         public IReadOnlyReactiveProperty<double> TotalSeconds => _totalSeconds;
         public IReadOnlyReactiveProperty<double> TotalMilliseconds => _totalMilliseconds;
-        
+
         public IObservable<Unit> OnAnyUpdate => _onAnyUpdate;
 
         public TimeSpan TimeSpan => _timeSpan;
@@ -56,7 +56,7 @@ namespace Plugins.Timer.Reactive
             _timeSpan = timeSpan;
             UpdateProperties();
         }
-        
+
         public void Add(TimeSpan timeSpan)
         {
             _timeSpan = _timeSpan.Add(timeSpan);
@@ -86,7 +86,7 @@ namespace Plugins.Timer.Reactive
             _timeSpan = _timeSpan.Negate();
             UpdateProperties();
         }
-        
+
         public static implicit operator TimeSpan(ReactiveTimeSpan reactiveTimeSpan) => reactiveTimeSpan._timeSpan;
 
         public static implicit operator ReactiveTimeSpan(TimeSpan timeSpan) => new ReactiveTimeSpan(timeSpan);
@@ -105,7 +105,7 @@ namespace Plugins.Timer.Reactive
             _totalMinutes.Value = _timeSpan.TotalMinutes;
             _totalSeconds.Value = _timeSpan.TotalSeconds;
             _totalMilliseconds.Value = _timeSpan.TotalMilliseconds;
-            
+
             _onAnyUpdate.OnNext(Unit.Default);
         }
     }
