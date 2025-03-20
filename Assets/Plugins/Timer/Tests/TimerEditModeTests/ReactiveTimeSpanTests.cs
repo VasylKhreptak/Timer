@@ -10,7 +10,7 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Constructor_InitializesToZero()
         {
             // Arrange & Act
-            var reactiveTimeSpan = new ReactiveTimeSpan();
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan();
 
             // Assert
             Assert.AreEqual(0, reactiveTimeSpan.Days.Value);
@@ -30,10 +30,10 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Constructor_WithTimeSpan_SetsInitialValues()
         {
             // Arrange
-            var timeSpan = new TimeSpan(1, 2, 3, 4, 500);
+            TimeSpan timeSpan = new TimeSpan(1, 2, 3, 4, 500);
 
             // Act
-            var reactiveTimeSpan = new ReactiveTimeSpan(timeSpan);
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan(timeSpan);
 
             // Assert
             Assert.AreEqual(1, reactiveTimeSpan.Days.Value);
@@ -47,8 +47,8 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Add_AddsTimeSpanCorrectly()
         {
             // Arrange
-            var reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 2, 3, 4, 500));
-            var timeToAdd = new TimeSpan(0, 1, 30, 30, 250); // 0d, 1h, 30m, 30s, 250ms
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 2, 3, 4, 500));
+            TimeSpan timeToAdd = new TimeSpan(0, 1, 30, 30, 250); // 0d, 1h, 30m, 30s, 250ms
 
             // Act
             reactiveTimeSpan.Add(timeToAdd);
@@ -65,8 +65,8 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Subtract_SubtractsTimeSpanCorrectly()
         {
             // Arrange
-            var reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 2, 3, 4, 500));
-            var timeToSubtract = new TimeSpan(0, 1, 2, 3, 400); // 0d, 1h, 2m, 3s, 400ms
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 2, 3, 4, 500));
+            TimeSpan timeToSubtract = new TimeSpan(0, 1, 2, 3, 400); // 0d, 1h, 2m, 3s, 400ms
 
             // Act
             reactiveTimeSpan.Subtract(timeToSubtract);
@@ -83,7 +83,7 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Multiply_MultipliesTimeSpanCorrectly()
         {
             // Arrange
-            var reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 0, 0, 0)); // 1 day
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 0, 0, 0)); // 1 day
 
             // Act
             reactiveTimeSpan.Multiply(2);
@@ -97,7 +97,7 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Divide_DividesTimeSpanCorrectly()
         {
             // Arrange
-            var reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(2, 0, 0, 0)); // 2 days
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(2, 0, 0, 0)); // 2 days
 
             // Act
             reactiveTimeSpan.Divide(2);
@@ -111,7 +111,7 @@ namespace Plugins.Timer.Tests.TimerEditModeTests
         public void Negate_NegatesTimeSpan()
         {
             // Arrange
-            var reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 2, 3, 4, 500));
+            ReactiveTimeSpan reactiveTimeSpan = new ReactiveTimeSpan(new TimeSpan(1, 2, 3, 4, 500));
 
             // Act
             reactiveTimeSpan.Negate();

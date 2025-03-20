@@ -3,6 +3,6 @@
     public enum UpdateMethod
     {
         DeltaTime = 0,
-        UnscaledDeltaTime = 1,
+        UnscaledDeltaTime = 1
     }
 }
